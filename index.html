@@ -27,7 +27,7 @@
                 const res = await fetch('https://api.nekosia.cat/api/v1/images/catgirl');
                 const json = await res.json();
                 if (!json.success) {
-                    alert('Request failed, please try again.');
+                    alert(`Request failed, please try again.\n\n${json}`);
                     return;
                 }
 
