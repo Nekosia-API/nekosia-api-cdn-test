@@ -2,30 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Nekosia API</title>
+    <title>Nekosia API Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button onclick="catchNeko()">Catch neko</button>
-    <img src="" alt="Meow" id="neko">
+    <div class="container">
+        <div class="image-container">
+            <img id="picture" alt="Meow">
+        </div>
+        <div class="button-container">
+            <button onclick="catchNeko()">Catch neko</button>
+        </div>
+    </div>
+
+    <div id="copyright"></div>
 
     <script>
-        const nekoImg = document.getElementById('neko');
+        const picture = document.getElementById('picture');
+        const copyright = document.getElementById('copyright');
 
         const catchNeko = async () => {
             try {
                 const res = await fetch('https://api.nekosia.cat/api/v1/images/catgirl');
                 const json = await res.json();
-                if (json.success) {
-                    nekoImg.src = json.image.compressed.url;
-                    nekoImg.alt = `ID: ${json.id}`;
-                    nekoImg.title = json.attribution.copyright;
-                    nekoImg.style.boxShadow = `0 0 22px ${json.colors.main}`;
-                } else {
-                    alert('Request failed, please try again.')
+                if (!json.success) {
+                    alert('Request failed, please try again.');
+                    return;
                 }
+
+                picture.src = json.image.original.url;
+                picture.alt = `ID: ${json.id}`;
+                picture.title = json.attribution.copyright;
+
+                copyright.textContent = json.attribution.copyright || json.source.url;
+                copyright.style.color = json.colors.main;
             } catch (err) {
                 console.error(err);
                 alert(err.message);
